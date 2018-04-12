@@ -30,11 +30,11 @@ class Copy extends DeploystrategyAbstract
 
 
         // Create all directories up to one below the target if they don't exist
-        $destDir = dirname($destPath);
+        $destDir = realpath(dirname($destPath));
+        if (empty($destDir)) {
+            throw new \ErrorException("Target directory $destDir is a broken symlink");
+        }
         if (!file_exists($destDir)) {
-            if (is_link($destDir)) {
-                throw new \ErrorException("Target directory $destDir is a broken symlink");
-            }
             mkdir($destDir, 0777, true);
         }
 
